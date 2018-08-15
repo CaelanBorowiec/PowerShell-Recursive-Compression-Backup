@@ -1,15 +1,14 @@
-# Borrowed this piece. Tests for 7Zip and if it exists creates an alias
-if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {throw "$env:ProgramFiles\7-Zip\7z.exe needed"}
-set-alias sz "$env:ProgramFiles\7-Zip\7z.exe"
-$files="G:\My Drive\Test data"
+$source="G:\My Drive\Test data\*"
 $target="G:\Team Drives\Hot Swap\ArchiveTest"
-$dirs = Get-ChildItem -Path $files | Where-Object { $_.Attributes -eq "Directory" }
 
-# Creates 7z files based on the parent folders name and drops it inside the archive folder
+$dirs = Get-ChildItem -Path $source -Recurse | Where-Object { $_.Attributes -eq "Directory" }
+
+# Creates zip files based on the parent folders name and drops it inside the archive folder
 Foreach ($dir in $dirs)
 {
       $name = $dir.name
+      Write-Output $dir
       $newname = $name.replace(" ","_")
-      sz a -tzip "$target\$newname" "$files\$dir"
-
+      $archive = $target + "\" + $name + ".zip"
+      Compress-Archive -Path $source -Update -DestinationPath $archive
 }
