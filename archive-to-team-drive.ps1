@@ -7,10 +7,15 @@ $dirs = Get-ChildItem -Path $source -Recurse | where {$_.psiscontainer -AND (gci
 Foreach ($dir in $dirs)
 {
       $name = $dir.name
+      $oldpath = $dir.FullName
+      $newpath = ($oldpath -replace [regex]::Escape($source), $target)
+
+      Write-Host -NoNewline $oldpath " -> " $newpath `r`n
+
       $newname = $name.replace(" ","_")
 
-      $files = $source + "\" + $name
-      $archive = $target + "\" + $name + ".zip" #Add the rest of the path here
+      $archive = $newpath + ".zip" #Add the rest of the path here
 
-      Compress-Archive -Path $source -Update -DestinationPath $archive
+      New-Item -ItemType Directory -Force -Path (Split-Path -Path $newpath -Parent)
+      Compress-Archive -Path $oldpath -Update -DestinationPath $archive
 }
