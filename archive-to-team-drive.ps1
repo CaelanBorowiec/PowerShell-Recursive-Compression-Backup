@@ -9,7 +9,7 @@ $dirs = Get-ChildItem -Path $files | Where-Object { $_.Attributes -eq "Directory
 Foreach ($dir in $dirs)
 {
       $name = $dir.name
-      $newname = $name.ToLower() -replace(" ","")
-      sz a -t7z "$target\$newname" "$files\$dir"
+      $newname = $name.replace(" ","_")
+      sz a -tzip "$target\$newname" "$files\$dir"
 
 }
