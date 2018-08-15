@@ -1,14 +1,16 @@
-$source="G:\My Drive\Test data\*"
-$target="G:\Team Drives\Hot Swap\ArchiveTest"
+$source="G:\My Drive\Test data" #Data to back up
+$target="G:\Team Drives\Hot Swap\ArchiveTest" #Backup root
 
-$dirs = Get-ChildItem -Path $source -Recurse | Where-Object { $_.Attributes -eq "Directory" }
+# Select all directories that contain 1 or more files:
+$dirs = Get-ChildItem -Path $source -Recurse | where {$_.psiscontainer -AND (gci -File $_.fullName).count -ne 0 }
 
-# Creates zip files based on the parent folders name and drops it inside the archive folder
 Foreach ($dir in $dirs)
 {
       $name = $dir.name
-      Write-Output $dir
       $newname = $name.replace(" ","_")
-      $archive = $target + "\" + $name + ".zip"
+
+      $files = $source + "\" + $name
+      $archive = $target + "\" + $name + ".zip" #Add the rest of the path here
+
       Compress-Archive -Path $source -Update -DestinationPath $archive
 }
