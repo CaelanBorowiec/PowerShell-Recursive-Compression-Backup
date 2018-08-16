@@ -1,5 +1,5 @@
-$source="G:\My Drive\Test data" #Data to back up
-$target="G:\Team Drives\Hot Swap\ArchiveTest" #Backup root
+$source="G:\My Drive\Some data" #Data to back up
+$target="G:\Team Drives\Backup Drive\somefolder" #Backup root
 
 # Recursively select all directories that contain 1 or more files:
 $dirs = Get-ChildItem -Path $source -Recurse | where {$_.psiscontainer -AND (Get-ChildItem -File $_.fullName).count -ne 0 }
