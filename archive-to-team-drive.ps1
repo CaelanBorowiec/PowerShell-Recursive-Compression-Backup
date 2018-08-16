@@ -6,22 +6,22 @@ $dirs = Get-ChildItem -Path $source -Recurse | where {$_.psiscontainer -AND (Get
 
 Foreach ($dir in $dirs)
 {
-      $name = $dir.name
-      $oldpath = $dir.FullName
-      $newpath = ($oldpath -replace [regex]::Escape($source), $target)
+  $name = $dir.name
+  $oldpath = $dir.FullName
+  $newpath = ($oldpath -replace [regex]::Escape($source), $target)
 
-      #Write-Host -NoNewline $oldpath " -> " $newpath `r`n
+  #Write-Host -NoNewline $oldpath " -> " $newpath `r`n
 
-      $newname = $name.replace(" ","_")
+  $newname = $name.replace(" ","_")
 
-      $archive = $newpath + ".zip" #Add the rest of the path here
+  $archive = $newpath + ".zip" #Add the rest of the path here
 
-      New-Item -ItemType Directory -Force -Path (Split-Path -Path $newpath -Parent)
-      #Compress-Archive -Path $oldpath -Update -DestinationPath $archive
+  New-Item -ItemType Directory -Force -Path (Split-Path -Path $newpath -Parent)
+  #Compress-Archive -Path $oldpath -Update -DestinationPath $archive
 
-      $files = Get-ChildItem -File -Path $oldpath
-      Foreach ($file in $files)
-      {
-        Compress-Archive -Path $file.FullName -Update -DestinationPath $archive
-      }
+  $files = Get-ChildItem -File -Path $oldpath
+  Foreach ($file in $files)
+  {
+    Compress-Archive -Path $file.FullName -Update -DestinationPath $archive
+  }
 }
