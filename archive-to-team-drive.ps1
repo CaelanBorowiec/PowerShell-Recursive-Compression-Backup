@@ -15,13 +15,17 @@ Foreach ($dir in $dirs) # For each selected folder...
   $archive = $newpath + ".zip" #Add .zip here in order to prevent confusing Compress-Archive if the folder name contains a period
 
   # Make sure the directory structure exists before trying to save a zip into it:
-  New-Item -ItemType Directory -Force -Path (Split-Path -Path $newpath -Parent)
+  if (!(Test-Path -Path (Split-Path -Path $newpath -Parent)))
+  {
+      New-Item -ItemType Directory -Force -Path (Split-Path -Path $newpath -Parent)
+  }
+
 
   # Select all files in the currently targeted directory:
   $files = Get-ChildItem -File -Path $oldpath
   Foreach ($file in $files)
   {
     # Place the files into a zip with the target directory name, in backup root + the relative path.
-    Compress-Archive -Path $file.FullName -Update -DestinationPath $archive
+    Compress-Archive -Path $file.FullName -Update -DestinationPath $archive -CompressionLevel Fastest
   }
 }
